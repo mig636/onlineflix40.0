@@ -73,289 +73,51 @@
             font-size: 18px;
             margin-bottom: 10px;
         }
-        
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-        
-        .modal-content {
-            background-color: #222;
-            margin: 10% auto;
-            padding: 20px;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 8px;
-        }
-        
-        .close-btn {
-            float: right;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            background-color: #333;
-            border: none;
-            border-radius: 4px;
-            color: white;
-        }
-        
-        .submit-btn {
-            background-color: #e50914;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        /* Admin login */
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            background-color: #222;
-            padding: 30px;
-            border-radius: 8px;
-        }
-        
-        .login-title {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .login-btn {
-            width: 100%;
-            background-color: #e50914;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        
-        /* Admin panel */
-        .admin-panel {
-            padding: 20px;
-        }
-        
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .logout-btn {
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
-    <!-- Página Principal -->
-    <div id="main-page">
-        <header>
-            <div class="logo">ONLINE FLIX</div>
-            <button class="admin-btn" onclick="showAdminLogin()">Admin</button>
-        </header>
-        
-        <div class="movie-container" id="movie-container">
-            <!-- Filmes serão carregados aqui -->
-        </div>
-    </div>
+    <header>
+        <div class="logo">ONLINE FLIX</div>
+        <button class="admin-btn" onclick="alert('Painel admin desativado (use o movies.json no GitHub)')">Admin</button>
+    </header>
     
-    <!-- Modal de Login Admin -->
-    <div id="admin-login-modal" class="modal">
-        <div class="login-container">
-            <span class="close-btn" onclick="closeModal('admin-login-modal')">&times;</span>
-            <h2 class="login-title">Login Admin</h2>
-            <div class="form-group">
-                <label for="admin-password">Senha:</label>
-                <input type="password" id="admin-password" placeholder="Digite a senha">
-            </div>
-            <button class="login-btn" onclick="checkAdminPassword()">Entrar</button>
-        </div>
+    <div class="movie-container" id="movie-container">
+        <!-- Filmes carregados pelo JavaScript -->
     </div>
-    
-    <!-- Painel Admin -->
-    <div id="admin-panel" class="modal" style="display: none;">
-        <div class="admin-panel">
-            <div class="admin-header">
-                <h2>Painel Administrativo</h2>
-                <button class="logout-btn" onclick="logoutAdmin()">Sair</button>
-            </div>
-            
-            <h3>Adicionar Novo Filme</h3>
-            <div class="form-group">
-                <label for="movie-title">Título do Filme:</label>
-                <input type="text" id="movie-title" placeholder="Nome do filme">
-            </div>
-            <div class="form-group">
-                <label for="movie-embed">Embed do YouTube:</label>
-                <textarea id="movie-embed" placeholder="Cole o código embed do YouTube aqui"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="movie-description">Descrição:</label>
-                <textarea id="movie-description" placeholder="Descrição do filme"></textarea>
-            </div>
-            <button class="submit-btn" onclick="addMovie()">Adicionar Filme</button>
-            
-            <h3 style="margin-top: 30px;">Filmes Cadastrados</h3>
-            <div id="admin-movie-list">
-                <!-- Lista de filmes para o admin -->
-            </div>
-        </div>
-    </div>
-    
+
     <script>
-        // Carrega filmes do localStorage quando a página carrega
-        document.addEventListener('DOMContentLoaded', function() {
-            loadMovies();
-        });
-        
-        // Mostra o modal de login admin
-        function showAdminLogin() {
-            document.getElementById('admin-login-modal').style.display = 'block';
-        }
-        
-        // Fecha qualquer modal
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-        
-        // Verifica a senha do admin
-        function checkAdminPassword() {
-            const password = document.getElementById('admin-password').value;
-            if (password === '123') {
-                closeModal('admin-login-modal');
-                document.getElementById('main-page').style.display = 'none';
-                document.getElementById('admin-panel').style.display = 'block';
-                loadAdminMovies();
-            } else {
-                alert('Senha incorreta!');
-            }
-        }
-        
-        // Sai do painel admin
-        function logoutAdmin() {
-            document.getElementById('admin-panel').style.display = 'none';
-            document.getElementById('main-page').style.display = 'block';
-        }
-        
-        // Carrega filmes na página principal
-        function loadMovies() {
-            const movies = JSON.parse(localStorage.getItem('onlineFlixMovies')) || [];
-            const container = document.getElementById('movie-container');
-            container.innerHTML = '';
-            
-            movies.forEach(movie => {
-                const movieCard = document.createElement('div');
-                movieCard.className = 'movie-card';
-                movieCard.innerHTML = `
-                    <iframe class="movie-embed" src="${movie.embed}" frameborder="0" allowfullscreen></iframe>
-                    <div class="movie-info">
-                        <h3 class="movie-title">${movie.title}</h3>
-                        <p>${movie.description}</p>
-                    </div>
+        // URL do seu arquivo movies.json no GitHub (SUBSTITUA COM SUA URL)
+        const MOVIES_JSON_URL = 'https://seu-usuario.github.io/seu-repositorio/movies.json';
+
+        // Carrega os filmes quando a página abre
+        window.onload = loadMovies;
+
+        async function loadMovies() {
+            try {
+                const response = await fetch(MOVIES_JSON_URL);
+                const movies = await response.json();
+                
+                const container = document.getElementById('movie-container');
+                container.innerHTML = '';
+                
+                movies.forEach(movie => {
+                    const movieCard = document.createElement('div');
+                    movieCard.className = 'movie-card';
+                    movieCard.innerHTML = `
+                        <iframe class="movie-embed" src="${movie.embed}" frameborder="0" allowfullscreen></iframe>
+                        <div class="movie-info">
+                            <h3 class="movie-title">${movie.title}</h3>
+                            <p>${movie.description || ''}</p>
+                        </div>
+                    `;
+                    container.appendChild(movieCard);
+                });
+            } catch (error) {
+                console.error("Erro ao carregar filmes:", error);
+                document.getElementById('movie-container').innerHTML = `
+                    <p style="color: red;">Erro ao carregar filmes. Verifique o console.</p>
                 `;
-                container.appendChild(movieCard);
-            });
-        }
-        
-        // Carrega filmes no painel admin
-        function loadAdminMovies() {
-            const movies = JSON.parse(localStorage.getItem('onlineFlixMovies')) || [];
-            const container = document.getElementById('admin-movie-list');
-            container.innerHTML = '';
-            
-            if (movies.length === 0) {
-                container.innerHTML = '<p>Nenhum filme cadastrado.</p>';
-                return;
             }
-            
-            movies.forEach((movie, index) => {
-                const movieItem = document.createElement('div');
-                movieItem.className = 'movie-card';
-                movieItem.style.marginBottom = '15px';
-                movieItem.innerHTML = `
-                    <h4>${movie.title}</h4>
-                    <button onclick="deleteMovie(${index})" style="background-color: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 4px; margin-top: 5px;">Excluir</button>
-                `;
-                container.appendChild(movieItem);
-            });
-        }
-        
-        // Adiciona um novo filme
-        function addMovie() {
-            const title = document.getElementById('movie-title').value;
-            const embed = document.getElementById('movie-embed').value;
-            const description = document.getElementById('movie-description').value;
-            
-            if (!title || !embed) {
-                alert('Título e Embed são obrigatórios!');
-                return;
-            }
-            
-            const movies = JSON.parse(localStorage.getItem('onlineFlixMovies')) || [];
-            
-            // Extrai o src do iframe se o usuário colar o iframe completo
-            let embedSrc = embed;
-            const srcMatch = embed.match(/src="([^"]*)"/);
-            if (srcMatch) {
-                embedSrc = srcMatch[1];
-            }
-            
-            movies.push({
-                title,
-                embed: embedSrc,
-                description
-            });
-            
-            localStorage.setItem('onlineFlixMovies', JSON.stringify(movies));
-            
-            // Limpa os campos
-            document.getElementById('movie-title').value = '';
-            document.getElementById('movie-embed').value = '';
-            document.getElementById('movie-description').value = '';
-            
-            // Recarrega as listas
-            loadMovies();
-            loadAdminMovies();
-            
-            alert('Filme adicionado com sucesso!');
-        }
-        
-        // Exclui um filme
-        function deleteMovie(index) {
-            const movies = JSON.parse(localStorage.getItem('onlineFlixMovies')) || [];
-            movies.splice(index, 1);
-            localStorage.setItem('onlineFlixMovies', JSON.stringify(movies));
-            loadMovies();
-            loadAdminMovies();
         }
     </script>
 </body>
